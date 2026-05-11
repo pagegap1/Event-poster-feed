@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pop-Up Markets & Bazaars</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #fdf6ec;
+      color: #2c1a0e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2c1a0e;
+      color: #fdf6ec;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.9rem; letter-spacing: 0.04em; }
+    header p  { margin-top: 0.35rem; font-size: 0.95rem; opacity: 0.75; font-style: italic; }
+
+    .post-form {
+      max-width: 560px;
+      margin: 2.5rem auto 0;
+      background: #fff8f0;
+      border: 1.5px solid #d9b896;
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem;
+    }
+    .post-form h2 { font-size: 1.1rem; margin-bottom: 1.1rem; color: #5a3010; }
+
+    .post-form label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 0.3rem; color: #5a3010; }
+
+    .post-form input[type="file"],
+    .post-form textarea {
+      width: 100%;
+      border: 1px solid #c9a07a;
+      border-radius: 6px;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.95rem;
+      background: #fffaf5;
+      color: #2c1a0e;
+      margin-bottom: 1rem;
+    }
+    .post-form textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+
+    .post-form button {
+      width: 100%;
+      background: #b84a1e;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.03em;
+      transition: background 0.18s;
+    }
+    .post-form button:hover { background: #8f3515; }
+
+    .feed { max-width: 560px; margin: 2.5rem auto 3rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    .event-card {
+      background: #fff8f0;
+      border: 1.5px solid #d9b896;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .event-card img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      max-height: 520px;
+    }
+    .event-card .card-body { padding: 1rem 1.2rem 1.2rem; }
+    .event-card .card-body p { font-size: 0.97rem; line-height: 1.6; color: #3a220e; }
+    .event-card .card-body time { display: block; margin-top: 0.6rem; font-size: 0.78rem; color: #9a7050; font-style: italic; }
+
+    .empty { text-align: center; padding: 3rem 1rem; color: #9a7050; font-style: italic; font-size: 1rem; }
+
+    @media (max-width: 600px) {
+      .post-form, .feed { margin-left: 1rem; margin-right: 1rem; }
+      header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Pop-Up Markets & Bazaars</h1>
+  <p>Share your event poster. Discover what's happening nearby.</p>
+</header>
+
+<div class="post-form">
+  <h2>Share an Upcoming Event</h2>
+  <form action="/post" method="post" enctype="multipart/form-data">
+    <label for="poster">Event Poster (JPG, PNG, GIF, WebP)</label>
+    <input type="file" id="poster" name="poster" accept="image/*" required />
+
+    <label for="description">Short Description</label>
+    <textarea id="description" name="description" placeholder="Tell people a little about the event — dates, what to expect, where to find it…" required></textarea>
+
+    <button type="submit">Post to Feed</button>
+  </form>
+</div>
+
+<div class="feed">
+  {% if events %}
+    {% for event in events %}
+    <div class="event-card">
+      <img src="/uploads/{{ event.image_filename }}" alt="Event poster" loading="lazy" />
+      <div class="card-body">
+        <p>{{ event.description }}</p>
+        <time>{{ event.created_at }}</time>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty">No events posted yet. Be the first to share one!</p>
+  {% endif %}
+</div>
+
+</body>
+</html>
